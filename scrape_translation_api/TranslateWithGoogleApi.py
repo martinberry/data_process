@@ -185,19 +185,17 @@ if __name__ == "__main__":
         else:
             print("Proxy is not in correct format.")
             sys.exit(-1)
-    '''else:
+    else:
         proxy_used = None
-    '''
 
     source_lines = Common.count_lines_of_file(source_file_name)
-    '''if parsed_args.offset_lines:
+    if parsed_args.offset_lines:
         if parsed_args.offset_lines == 'auto':
             print('Auto update the offset_lines')
             offset_lines = Common.count_lines_of_file(target_file_name)
             print('auto offset_lines=' + str(offset_lines))
         else:
             offset_lines = int(parsed_args.offset_lines)
-    '''
 
     target_file = open(target_file_name, "a+")
     if offset_lines == 0:

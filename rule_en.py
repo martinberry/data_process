@@ -528,7 +528,7 @@ class Slot_Tag_Notrans(Rule_Line):
             (ur'(www\.[A-Za-z0-9\-_~\*\'@&=\+\$/\?#\.]+[a-zA-Z0-9/#])', 'N'),
             (ur'(([A-Za-z0-9\.-]+\.[A-Za-z0-9-]+|[A-Za-z]+)@[A-Za-z0-9\.-]+[A-Za-z])', 'N')
         ]
-        Pattern_List = [(re.compile(r[0].decode('utf-8')), r[1]) for r in Pattern_List]
+        Pattern_List = [(re.compile(r[0]), r[1]) for r in Pattern_List]
 
         return self.slot_tag(line, Pattern_List)
 

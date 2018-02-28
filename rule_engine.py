@@ -121,7 +121,7 @@ class FileLinesStep(FileStepBase):
 class FileStep(FileStepBase):
     def __init__(self, step):
         super(FileStep, self).__init__(step)
-        self.temp_outputs = []
+
     def run(self):
 
         inputs = self.inputs
@@ -130,7 +130,7 @@ class FileStep(FileStepBase):
             print rule
             outputs = rule.run(inputs)
             inputs = outputs
-            self.temp_outputs.extend(outputs)
+
         if len(outputs) != len(self.outputs):
             print outputs
             print self.outputs
@@ -151,7 +151,7 @@ class ContextStep(object):
         self.name = step['name']
         self.type = step['type']
         self.rules = []
-        self.temp_outputs=[]
+
         for rule in step['rules']:
             init_args = rule["init_args"]
             if context:
@@ -237,9 +237,7 @@ class RuleEngine(object):
                 if o not in final_outputs and o not in inputs:
                     self.remove_file(o)
 
-        for step in self.schema['steps']:
-            if hasattr(step,'temp_outputs'):
-                map(self.remove_file,step.temp_outputs)
+        map(self.remove_file, glob.glob("temp_*"))
 
         signal.signal(self.sig, self.original_handler)
         self.released = True
@@ -281,7 +279,7 @@ class RuleEngine(object):
             if 'inputs' in self.schema:
                 print 'will override schema inputs from --infiles %s' % str(inputs)
                 self.schema['inputs'] = inputs
-                for f in self.schema['inputs']:
+                for f in self.schema[inputs]:
                     shutil.copyfile(f, os.path.join(self.workdir, os.path.basename(f)))
             else:
                 print 'will override first step inputs from --infiles %s' % str(inputs)

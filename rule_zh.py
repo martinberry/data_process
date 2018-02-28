@@ -1174,7 +1174,3 @@ class Align_Correct_En_Word_Case(Rule):
         ret_line += sentence[last_start_index:]
         ret_sentence_array = ret_line.split(' ')
         return ret_sentence_array
-
-if __name__ == '__main__':
-    snc = Split_Not_ChineseCharacter()
-    line = snc.run("中 avb")
