@@ -1,0 +1,36 @@
+{
+  "meta": {
+    "name": "tech domain translation POST processing for lib mode",
+    "version": "1.0",
+    "author": "Aihu Zhang",
+    "description": "for using in lib mode only"
+  },
+
+  "steps": [
+    {
+      "name": "post clean",
+      "type": "sole_line",
+      "replace_empty_line": "",
+      "rules": [
+        ["rule_common.General_Sentence_Detokenizer",
+          {
+            "lang": "en"
+          }
+        ],
+        ["rule_zh.Replace_Lower_Char_To_Upper_Word_Line",
+          {
+            "upperCharWord":
+            ["data/lower_char_word_list"]
+          }
+        ],
+        ["rule_zh.Find_Word_Entity",
+          {
+            "word_dict":
+            "data/generate_result"
+          }
+        ],
+        ["rule_zh.Remove_Space",       {}]
+      ]
+    }
+  ]
+}

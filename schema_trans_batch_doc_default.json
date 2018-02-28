@@ -1,0 +1,28 @@
+{
+  "meta": {
+    "name": "translate batch docs",
+    "version": "1.0",
+    "author": "Liu Wei",
+    "description": "translate batch docs"
+  },
+
+  "steps": [
+    {
+      "name": "translate each file in file list",
+      "type": "file",
+      "inputs": ["articles/cnn.list"],
+      "rules": [
+        [
+          "rule_super.Run_Schema",
+          {
+            "schema": "schema_trans_single_doc_http.json",
+            "generator": "Generator_Loop_File_List('articles/cnn.list')"
+          }
+        ]
+      ],
+      "outputs": ["trans.list", "fail.list"]
+    }
+  ],
+
+  "final_outputs": ["trans.list", "fail.list"]
+}

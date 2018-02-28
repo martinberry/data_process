@@ -1,0 +1,46 @@
+{
+  "meta": {
+    "name": "translate batch docs",
+    "version": "1.0",
+    "author": "Liu Wei",
+    "description": "translate batch docs"
+  },
+
+  "inputs": ["doctrans_mapping.json", "/data/personal/liuwei/share/raw_articles/extract_articles_huffingtonpost/huffingtonpost.list"],
+
+  "steps": [
+    {
+      "name": "create new index and setup mapping if needed",
+      "type": "file",
+      "inputs": ["doctrans_mapping.json"],
+      "rules": [
+        [
+          "rule_common.Create_ES_Index_If_No_Exists",
+          {
+            "host": "http://192.168.1.150:9200",
+            "index": "doc.huffingtonpost",
+            "type": "doctrans"
+          }
+        ]
+      ],
+      "outputs": ["_"]
+    },
+    {
+      "name": "clean each file in file list then push to ES",
+      "type": "file",
+      "inputs": ["huffingtonpost.list"],
+      "rules": [
+        [
+          "rule_super.Run_Schema",
+          {
+            "schema": "schema_clean_en_doc_then_push_es.json",
+            "generator": "Generator_Loop_File_List"
+          }
+        ]
+      ],
+      "outputs": ["trans.list", "fail.list"]
+    }
+  ],
+
+  "final_outputs": ["trans.list", "fail.list"]
+}

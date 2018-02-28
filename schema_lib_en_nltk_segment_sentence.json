@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "name": "nltk segment one line to sentences",
+    "version": "1.0",
+    "author": "Liu Wei",
+    "description": "for using in lib mode only"
+  },
+
+  "steps": [
+    {
+      "name": "pre clean",
+      "type": "file",
+      "replace_empty_line": "",
+      "inputs": [""],
+      "rules": [
+        ["rule_en.Segment_EN_Doc_To_Sentences",     {}]
+      ],
+      "outputs":["doc"]
+    }
+  ],
+  "final_outputs":["article_1"]
+}

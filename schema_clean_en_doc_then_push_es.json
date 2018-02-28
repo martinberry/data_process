@@ -1,0 +1,88 @@
+{
+  "meta": {
+    "name": "translate a doc",
+    "version": "1.0",
+    "author": "Liu Wei",
+    "description": "translate a doc with specified doc and merge with GBB results for comparing"
+  },
+
+  "startover": 0,
+
+  "steps": [
+    {
+      "name": "split json to text and metadata",
+      "type": "file",
+      "inputs": ["doc.orig.json"],
+      "rules": [
+        ["rule_common.Extract_Text_From_Raw_Doc",       {}]
+      ],
+      "outputs": ["doc.text", "meta.json"]
+    },
+    {
+      "name": "general clean",
+      "type": "line",
+      "replace_empty_line": "",
+      "inputs": ["doc.text"],
+      "rules": [
+        ["rule_common.Remove_Single_Quotation",       {}],
+        ["rule_common.Norm_Ellipsis",                 {}],
+        ["rule_common.Remove_Square_Content",         {}],
+        ["rule_common.Remove_Redundant_Spaces",       {}],
+        ["rule_en.Remove_Bullet",                     {}],
+        ["rule_en.Replace_Chinese_Single_Quotation",  {}],
+        ["rule_en.Remove_Punctuation",                {}],
+        ["rule_en.Remove_Between_QuesMark",           {}],
+        ["rule_common.Remove_Redundant_Spaces",       {}]
+      ],
+      "outputs": ["doc.clean", "_"]
+    },
+    {
+      "name": "split doc to sentences",
+      "type": "file",
+      "inputs": ["doc.clean"],
+      "rules": [
+        ["rule_en.Segment_EN_Doc_To_Sentences",       {}]
+      ],
+      "outputs": ["doc.clean.sens"]
+    },
+    {
+      "name": "Segment & tokenize for Atman",
+      "type": "line",
+      "replace_empty_line": "",
+      "inputs": ["doc.clean.sens"],
+      "rules": [
+        ["rule_common.Segment_Jieba",                 {}],
+        ["rule_common.Remove_Redundant_Spaces",       {}],
+        ["rule_common.To_Lower",                      {}]
+      ],
+      "outputs": ["doc.seg", "_"]
+    },
+    {
+      "name": "create ES type json data",
+      "type": "file",
+      "inputs": ["meta.json", "doc.seg"],
+      "rules": [
+        ["rule_common.Create_ES_Data_Type_transdoc",  {"processed_method": "schema_clean_en_doc_then_push_es.json"}]
+      ],
+      "outputs": ["doc.json"]
+    },
+    {
+      "disable": 0,
+      "name": "push to Elastic Search",
+      "type": "file",
+      "inputs": ["doc.json"],
+      "rules": [
+        ["rule_common.Index_to_ElasticSearch",
+          {
+            "host": "http://192.168.1.150:9200",
+            "index": "doc.huffingtonpost",
+            "type": "doctrans"
+          }
+        ]
+      ],
+      "outputs": ["es_resp.json"]
+    }
+  ],
+
+  "final_outputs": ["doc.json", "es_resp.json"]
+}

@@ -1,0 +1,40 @@
+{
+  "meta": {
+    "name": "tech data pre-process schema",
+    "version": "1.0",
+    "author": "Aihu Zhang",
+    "description": "the input is a file with two columns: English sentence\tChinese sentence"
+  },
+
+  "steps": [
+    {
+      "name": "clean en",
+      "type": "line",
+      "replace_empty_line": "REMOVETHISLINE",
+      "inputs": ["en"],
+      "rules": [
+        ["rule_en.Replace_Chinese_Punctuation",       {}],
+        ["rule_common.Remove_Single_Quotation_v2",    {}],
+        ["rule_en.Remove_Contain_Chinese",            {}],
+        ["rule_en.Dedupe_Repeated_Punctuation",       {}],
+        ["rule_en.Remove_Bullet_v2",                  {}],
+        ["rule_common.Remove_Redundant_Spaces",       {}],
+        ["rule_common.Remove_Bad_Begin",              {}],
+        ["rule_common.Remove_Special_Chars",          {}],
+        ["rule_common.To_Lower",                      {}]
+      ],
+      "outputs": ["en.line.clean", "en.remove"]
+    },
+    {
+      "name": "apply en tokenizer",
+      "type": "file",
+      "inputs": ["en.line.clean"],
+      "rules": [
+        ["rule_common.General_Tokenizer",             {"lang": "en"}]
+      ],
+      "outputs": ["en.line.clean.tok"]
+    }
+  ],
+
+  "final_outputs": ["en.line.clean.tok"]
+}

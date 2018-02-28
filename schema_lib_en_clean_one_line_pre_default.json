@@ -1,0 +1,23 @@
+{
+  "meta": {
+    "name": "default PRE processing En input data (with temp file created), for English language",
+    "version": "1.0",
+    "author": "Liu Wei",
+    "description": "for using in lib mode only"
+  },
+
+  "steps": [
+    {
+      "name": "pre clean",
+      "type": "sole_line",
+      "replace_empty_line": "",
+      "inputs": [""],
+      "rules": [
+        ["rule_common.Remove_Redundant_Spaces",       {}],
+        ["rule_common.Segment_Jieba",                 {}],
+        ["rule_common.Remove_Redundant_Spaces",       {}],
+        ["rule_common.To_Lower",                      {}]
+      ]
+    }
+  ]
+}

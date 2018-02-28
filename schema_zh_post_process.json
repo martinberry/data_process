@@ -1,0 +1,38 @@
+{
+  "meta": {
+    "name": "post-process zh translataion results",
+    "version": "1.0",
+    "author": "Wei",
+    "description": ""
+  },
+
+  "steps": [
+    {
+      "name": "remove spaces",
+      "type": "line",
+      "replace_empty_line": "",
+      "inputs": ["zh"],
+      "rules":
+      [
+         ["rule_zh.Replace_Lower_Char_To_Upper_Word",
+          {
+            "upperCharWord":
+            ["data/lower_char_word_list"],
+            "source_text":
+            "/home/atman-dusixing/WorkDir/Catch_The_Upper_Character_Word/finance.en"
+          }
+        ],
+        ["rule_zh.Find_Word_Entity",
+          {
+            "word_dict":
+            "data/generate_result"
+          }
+        ],
+        ["rule_zh.Remove_Space",       {}]
+      ],
+      "outputs": ["orig_zh.out", "_"]
+    }
+  ],
+
+  "final_outputs": ["orig_zh.out"]
+}

@@ -1,0 +1,60 @@
+{
+
+  "doctrans": {
+
+    "properties": {
+
+      "original_doc": {
+        "properties": {
+          "date": { "type": "string" },
+          "lang": { "type": "string" },
+          "source": { "type": "string" },
+          "structured_content": {
+            "type": "object",
+            "properties":{
+              "title": { "type": "string" },
+              "author": { "type": "string" },
+              "publication_date": { "type": "string" }
+            }
+          }
+        }
+      },
+
+      "processed_doc": {
+        "properties": {
+          "date": { "type": "date", "format": "strict_date_optional_time||epoch_millis" },
+          "processed_method": { "type": "string" },
+          "paragraphs": {
+            "type": "nested"
+          }
+        }
+      },
+
+      "translated_docs": {
+        "type": "nested",
+        "properties": {
+          "lang": { "type": "string" },
+          "date": { "type": "date", "format": "strict_date_optional_time||epoch_millis" },
+          "engine": { "type": "string" },
+          "model": { "type": "string" },
+          "score": { "type": "float" },
+          "paragraphs": {
+            "type": "nested",
+            "properties": {
+              "sentences": {
+                "type": "nested",
+                "properties": {
+                  "score": { "type": "float" },
+                  "text": { "type": "string" },
+                  "text_unk": { "type": "string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+  }
+
+}

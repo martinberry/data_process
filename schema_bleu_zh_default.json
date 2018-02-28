@@ -1,0 +1,33 @@
+{
+  "meta": {
+    "name": "default BLEU schema, for Chinese language",
+    "version": "1.0",
+    "author": "Liu Wei",
+    "description": "need pass hypo file from --infile, and put reference in this schema. result is outputed to both stdout and a file"
+  },
+
+  "steps": [
+     {
+      "name": "clean",
+      "type": "line",
+      "replace_empty_line": "",
+      "inputs": ["test_data/hypo.txt"],
+      "rules": [
+        ["rule_zh.Segment_Jieba_Then_Char",     {}]
+      ],
+      "outputs": ["zh.char", "_"]
+    },
+    {
+      "name": "bleu",
+      "type": "file",
+      "inputs": ["zh.char"],
+      "rules": [
+        ["rule_common.Bleu",                {"reference": "/home/liuwei/proj/data-process/data_process/LDA/train.un.group.3/zh_based/un.devset.clean.seg.dedupe.en-zh.grouped.3.filtered.zh.seg"}],
+        ["rule_common.Sort",                {"num_sort": 1}]
+      ],
+      "outputs": ["bleu.result"]
+    }
+  ],
+
+  "final_outputs": ["bleu.result", "zh.char"]
+}

@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "name": "test GBB bleu",
+    "version": "1.0",
+    "author": "Du SiXing",
+    "description": "translate a doc with specified doc and merge with GBB results for comparing"
+  },
+
+  "steps": [
+    {
+      "name": "translate with Bing",
+      "type": "file",
+      "inputs": ["TestData/un.en"],
+      "rules": [
+        ["rule_common.Translate_3rd_Party",  {"engine": "bing", "from": "en", "to": "zh"}]
+      ],
+      "outputs": ["bing_tran_un"]
+    }
+  ],
+
+  "final_outputs": ["bing_tran_finance"]
+
+
+}

@@ -1,0 +1,115 @@
+{
+  "meta": {
+    "name": "Fix number problem",
+    "version": "1.0",
+    "author": "Du Sixing",
+    "description": "the input is a file with two columns: English sentence\tChinese sentence"
+  },
+
+  "steps":[
+      {
+      "name": "split the files content to En and Zh",
+      "type": "file",
+      "inputs":["finance.train"],
+      "rules": [
+        ["rule_common.Split_To_Twin_Files",{}]
+      ],
+      "outputs":["en","zh"]
+    },
+    {
+      "name": "clean en",
+      "type": "line",
+      "replace_empty_line": "REMOVETHISLINE",
+      "inputs":["en"],
+      "rules": [
+        ["rule_en.Remove_Contain_Chinese",{}],
+        ["rule_en.Remove_Not_Contain_Number_Or_Aphabet",{}],
+        ["rule_en.Remove_Bullet_v2",{}],
+        ["rule_en.Remove_Punctuation_v2",{}],
+        ["rule_en.Replace_Chinese_Punctuation",{}],
+        ["rule_common.Remove_Consecutive_Dash_Or_Underscore",{}],
+        ["rule_common.To_Lower",{}]
+      ],
+      "outputs":["en_clean","en_clean_remove"]
+    },
+    {
+      "name": "clean zh",
+      "type": "line",
+      "replace_empty_line": "REMOVETHISLINE",
+      "inputs":["zh"],
+      "rules": [
+        ["rule_zh.Remove_Not_Contain_Chinese",{}],
+        ["rule_zh.Remove_Bullet_v2",{}],
+        ["rule_zh.Remove_Punctuation_v2",{}],
+        ["rule_zh.Remove_Chinese_Single_Quotation",{}],
+        ["rule_common.Remove_Consecutive_Dash_Or_Underscore",{}],
+        ["rule_common.To_Lower",{}]
+      ],
+      "outputs":["zh_clean","zh_clean_remove"]
+    },
+    {
+      "name": "fix number problem of english sentences",
+      "type": "line",
+      "replace_empty_line": "REMOVETHISLINE",
+      "inputs":["en_clean"],
+      "rules": [
+        ["rule_en.Separate_Currency_Number",{}],
+        ["rule_common.Separate_Number_Unit",{}],
+        ["rule_en.Slot_Tag_Number",{"number_tag":"N"}],
+        ["rule_common.Remove_Redundant_Spaces",{}]
+      ],
+      "outputs":["en_number_fixed","temp_en_number_fixed"]
+    },
+    {
+      "name":"fix number problem of chinese sentences",
+      "type":"line",
+      "replace_empty_line": "REMOVETHISLINE",
+      "inputs":["zh_clean"],
+      "rules":[
+        ["rule_zh.Split_Not_ChineseCharacter",{}],
+        ["rule_common.Separate_Number_Unit",{}],
+        ["rule_zh.Slot_Tag_Number",{"number_tag":"N"}],
+        ["rule_zh.Remove_Chinese_Number_Unit_After_Number_Entity",{"number_tag":"N"}],
+        ["rule_common.Remove_Redundant_Spaces",{}]
+      ],
+
+       "outputs":["zh_number_fixed","temp_zh_number_fixed"]
+    },
+    {
+      "name":"Using jieba lib to segment english sentence",
+      "type":"line",
+      "replace_empty_line":"REMOVETHISLINE",
+      "inputs":["en_number_fixed"],
+      "rules":[
+        ["rule_common.Segment_Jieba",{}],
+        ["rule_common.Remove_Redundant_Spaces",{}]
+      ],
+      "outputs":["en_jieba_seq","temp_en_jieba_seq"]
+    },
+     {
+      "name":"Using jieba lib to segment chinese sentence",
+      "type":"line",
+      "replace_empty_line":"REMOVETHISLINE",
+      "inputs":["zh_number_fixed"],
+      "rules":[
+        ["rule_common.Segment_Jieba",{}],
+        ["rule_common.Remove_Redundant_Spaces",{}]
+      ],
+       "outputs":["zh_jieba_seq","temp_zh_jieba_seq"]
+    },
+    {
+      "name": "final clean",
+      "type": "file",
+      "inputs": ["en_jieba_seq", "zh_jieba_seq"],
+      "rules": [
+        ["rule_common.Combine_Twin_Files",            {}],
+        ["rule_common.Remove_Lines_With_Content",     {"content": "REMOVETHISLINE"}],
+        ["rule_common.Sort",{}],
+        ["rule_common.Uniq",{}],
+        ["rule_common.Split_To_Twin_Files",{}]
+      ],
+      "outputs": ["final_en","final_zh"]
+    }
+  ],
+  "final_outputs": ["en", "zh", "en_clean", "zh_clean","en_number_fixed","zh_number_fixed","en_jieba_seq", "zh_jieba_seq","final_en","final_zh"]
+}

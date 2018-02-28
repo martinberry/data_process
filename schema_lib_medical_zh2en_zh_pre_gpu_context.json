@@ -1,0 +1,149 @@
+{
+  "meta": {
+    "name": "medical domain Chinese sentence PRE processing for zh-to-en translation in lib mode with context rule",
+    "version": "1.0",
+    "author": "Aihu Zhang",
+    "description": "for using in lib mode only. $$ is special prefix for refer field in context, which is a dictionary for storing or obtaining value."
+  },
+
+  "steps": [
+    {
+      "name": "pre clean",
+      "type": "context",
+      "rules": [
+        {
+            "name": "rule_common.Pre_Replacing_Rule",
+            "init_args": {
+                "bifrost_instance": "$$bifrost"
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.Replace_HTML_Entities",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.FullWidth_To_Halfwidth",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_zh.Convert_Traditional_To_Simplified",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.Remove_Bad_Begin",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.Remove_Special_Chars",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.Remove_Redundant_Spaces",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_zh.Split_Not_ChineseCharacter",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_zh.Slot_Tag_Number_v5",
+            "init_args": {
+                "number_tag": "<N>"
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.Remove_Redundant_Spaces",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.General_Sentence_Tokenizer",
+            "init_args": {
+                "lang": "zh"
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_zh.Seg_Chinese_Only_In_Sentence",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.Restore_Entity",
+            "init_args": {
+                "entity_tag": "N",
+                "case_sensitive": "True"
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.BPE_Apply_Line",
+            "init_args": {
+                "bpe_instance": "$$bpe"
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        }
+      ]
+    }
+  ]
+}

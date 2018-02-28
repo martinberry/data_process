@@ -1,0 +1,146 @@
+{
+  "meta": {
+    "name": "tech data pre-process schema",
+    "version": "1.0",
+    "author": "Aihu Zhang",
+    "description": "the input is a file with two columns: English sentence\tChinese sentence"
+  },
+
+  "steps": [
+    {
+      "name": "split",
+      "type": "file",
+      "inputs": ["test_data/en-zh.txt"],
+      "rules": [
+        ["rule_common.Split_To_Twin_Files",   {}]
+      ],
+      "outputs": ["en", "zh"]
+    },
+    {
+      "name": "clean en",
+      "type": "line",
+      "replace_empty_line": "REMOVETHISLINE",
+      "inputs": ["en"],
+      "rules": [
+        ["rule_en.Replace_Chinese_Punctuation",       {}],
+        ["rule_common.Remove_Single_Quotation_v2",    {}],
+        ["rule_en.Remove_Contain_Chinese",            {}],
+        ["rule_en.Dedupe_Repeated_Punctuation",       {}],
+        ["rule_en.Remove_Bullet_v2",                  {}],
+        ["rule_common.Remove_Redundant_Spaces",       {}],
+        ["rule_common.Remove_Bad_Begin",              {}],
+        ["rule_common.Remove_Special_Chars",          {}],
+        ["rule_common.To_Lower",                      {}]
+      ],
+      "outputs": ["en.clean", "_"]
+    },
+    {
+      "name": "tag number in en",
+      "type": "line",
+      "replace_empty_line": "REMOVETHISLINE",
+      "inputs": ["en.clean"],
+      "rules": [
+        ["rule_en.Separate_Currency_Number",          {}],
+        ["rule_common.Separate_Number_Unit",          {}],
+        ["rule_en.Slot_Tag_Number",                   {"number_tag": "<n>"}],
+        ["rule_common.Remove_Redundant_Spaces",       {}]
+      ],
+      "outputs": ["en.clean.num", "_"]
+    },
+    {
+      "name": "apply en tokenizer",
+      "type": "file",
+      "inputs": ["en.clean.num"],
+      "rules": [
+        ["rule_common.General_Tokenizer",             {"lang": "en"}]
+      ],
+      "outputs": ["en.clean.num.tok"]
+    },
+    {
+      "name": "split compound words and restore en entity",
+      "type": "line",
+      "replace_empty_line": "REMOVETHISLINE",
+      "inputs": ["en.clean.num.tok"],
+      "rules": [
+        ["rule_en.Split_Compound_Word",               {"connector_tag": "<->"}],
+        ["rule_common.Restore_Entity",                {"entity_tag": "Person|Organization|Location|N"}]
+      ],
+      "outputs": ["en.clean.num.tok.split_comp.restore_entity", "_"]
+    },
+    {
+      "name": "clean zh",
+      "type": "line",
+      "replace_empty_line": "REMOVETHISLINE",
+      "inputs": ["zh"],
+      "rules": [
+        ["rule_common.Remove_Single_Quotation_v2",    {}],
+        ["rule_zh.Remove_Not_Contain_Chinese",        {}],
+        ["rule_zh.Dedupe_Repeated_Punctuation",       {}],
+        ["rule_en.Dedupe_Repeated_Punctuation",       {}],
+        ["rule_zh.Remove_Bullet_v2",                  {}],
+        ["rule_common.Remove_Redundant_Spaces",       {}],
+        ["rule_common.Remove_Bad_Begin",              {}],
+        ["rule_common.Remove_Special_Chars",          {}],
+        ["rule_common.To_Lower",                      {}]
+      ],
+      "outputs": ["zh.clean", "_"]
+    },
+    {
+      "name": "tag number in zh",
+      "type": "line",
+      "replace_empty_line": "REMOVETHISLINE",
+      "inputs": ["zh.clean"],
+      "rules": [
+        ["rule_zh.Split_Not_ChineseCharacter",        {}],
+        ["rule_common.Separate_Number_Unit",          {}],
+        ["rule_zh.Slot_Tag_Number",                   {"number_tag": "<n>"}],
+        ["rule_zh.Remove_Chinese_Number_Unit_After_Number_Entity", {"number_tag": "<n>"}],
+        ["rule_common.Remove_Redundant_Spaces",       {}]
+      ],
+
+      "outputs": ["zh.clean.num", "_"]
+    },
+    {
+      "name": "apply en tokenizer",
+      "type": "file",
+      "inputs": ["zh.clean.num"],
+      "rules": [
+        ["rule_common.General_Tokenizer",             {"lang": "en"}]
+      ],
+      "outputs": ["zh.clean.num.tok"]
+    },
+    {
+      "name": "segment zh (en sub-string not impacted)",
+      "type": "file",
+      "inputs": ["zh.clean.num.tok"],
+      "rules": [
+        ["rule_zh.Seg_Chinese_Only",                  {}]
+      ],
+      "outputs": ["zh.clean.num.tok.seg"]
+    },
+    {
+      "name": "restore zh entity",
+      "type": "line",
+      "replace_empty_line": "REMOVETHISLINE",
+      "inputs": ["zh.clean.num.tok.seg"],
+      "rules": [
+        ["rule_common.Restore_Entity",                {"entity_tag": "Person|Organization|Location|N"}]
+      ],
+      "outputs": ["zh.clean.num.tok.seg.restore_entity", "_"]
+    },
+    {
+      "name": "final clean",
+      "type": "file",
+      "inputs": ["en.clean.num.tok.split_comp.restore_entity", "zh.clean.num.tok.seg.restore_entity"],
+      "rules": [
+        ["rule_common.Combine_Twin_Files",            {}],
+        ["rule_common.Remove_Lines_With_Content",     {"content": "REMOVETHISLINE"}],
+        ["rule_common.Sort",                          {}],
+        ["rule_common.Uniq",                          {}],
+        ["rule_common.Split_To_Twin_Files",           {}]
+      ],
+      "outputs": ["en.final", "zh.final"]
+    }
+  ],
+  "final_outputs": ["en.final", "zh.final"]
+}

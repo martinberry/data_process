@@ -1,0 +1,69 @@
+{
+  "article": {
+    "properties": {
+      "source": { "type": "string" },
+      "date": { "type": "string" },
+      "lang": { "type": "string" },
+      "categories": { "type": "string" },
+      "tags": { "type": "string" },
+      "original_paragraphs": { "type": "string" },
+      "count_paragraph": { "type": "integer" },
+      "count_sentence": { "type": "integer" },
+      "structured_content": {
+        "properties": {
+          "title": { "type": "string" },
+          "author": { "type": "string" },
+          "publication_date": { "type": "string" }
+        }
+      }
+    }
+  },
+
+  "sentence": {
+    "_parent": { "type": "article" },
+    "properties": {
+      "lang": { "type": "string" },
+      "text": { "type": "string" },
+      "paragraph_index": { "type": "integer" },
+      "sentence_sub_index": { "type": "integer" },
+
+      "atman_cover_xxx": {
+        "properties": {
+          "score": { "type": "float" },
+          "article_score": { "type": "float" },
+          "lang": { "type": "string" },
+          "date": { "type": "date", "format": "strict_date_optional_time||epoch_millis" },
+          "processor_pre": { "type": "string" },
+          "processor_post": { "type": "string" },
+          "text_clean": { "type": "string" },
+          "text_trans": { "type": "string" },
+          "text_trans_unk": { "type": "string" },
+          "text_trans_post": { "type": "string" }
+        }
+      },
+      "baidu": {
+        "properties": {
+          "lang": { "type": "string" },
+          "date": { "type": "date", "format": "strict_date_optional_time||epoch_millis" },
+          "text_trans": { "type": "string" }
+        }
+      },
+      "google": {
+        "properties": {
+          "lang": { "type": "string" },
+          "date": { "type": "date", "format": "strict_date_optional_time||epoch_millis" },
+          "text_trans": { "type": "string" }
+        }
+      },
+      "human": {
+        "properties": {
+          "lang": { "type": "string" },
+          "date": { "type": "date", "format": "strict_date_optional_time||epoch_millis" },
+          "author": { "type": "string" },
+          "text_trans": { "type": "string" }
+        }
+      }
+    }
+  }
+
+}

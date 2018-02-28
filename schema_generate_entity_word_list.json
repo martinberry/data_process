@@ -1,0 +1,34 @@
+{
+  "meta": {
+    "name": "default BLEU schema, for Chinese language",
+    "version": "1.0",
+    "author": "Liu Wei",
+    "description": "need pass hypo file from --infile, and put reference in this schema. result is outputed to both stdout and a file"
+  },
+
+  "steps": [
+     {
+      "name": "post clean",
+      "type": "file",
+      "replace_empty_line": "",
+       "inputs":[""],
+      "rules": [
+        ["rule_zh.Generate_Entity_Word_Dict",
+          {
+            "word_entity":
+            "/home/atman-dusixing/WorkDir/Entity_Post/entity.txt",
+            "baidu_word_entity":
+            "/home/atman-dusixing/WorkDir/Entity_Post/entity_baidu.txt",
+            "google_word_entity":
+            "/home/atman-dusixing/WorkDir/Entity_Post/entity_google.txt"
+          }
+        ],
+        ["rule_common.Sort",{}],
+        ["rule_common.Uniq",{}]
+      ],
+       "outputs":["generate_result"]
+    }
+  ],
+
+  "final_outputs": ["replace_result"]
+}

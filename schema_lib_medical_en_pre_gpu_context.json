@@ -1,0 +1,176 @@
+{
+  "meta": {
+    "name": "medical domain PRE processing for lib mode with context rule",
+    "version": "1.0",
+    "author": "Deng Wang",
+    "description": "for using in lib mode only. $$ is special prefix for refer field in context, which is a dictionary for storing or obtaining value."
+  },
+
+  "steps": [
+    {
+      "name": "pre clean",
+      "type": "context",
+      "rules": [
+        {
+            "name": "rule_common.Pre_Replacing_Rule",
+            "init_args": {
+                "bifrost_instance": "$$bifrost"
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_en.Separate_Currency_Number",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.Separate_Number_Unit",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_en.Slot_Tag_Number_v3",
+            "init_args": {
+                "number_tag": "<N>"
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.Remove_Redundant_Spaces",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_en.Replace_Chinese_Punctuation",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.Remove_Single_Quotation_v2",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_en.Dedupe_Repeated_Punctuation",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_en.Remove_Bullet_v2",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.Remove_Redundant_Spaces",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.Remove_Bad_Begin",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.Remove_Special_Chars",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.To_Lower",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.General_Sentence_Tokenizer",
+            "init_args": {
+                "lang": "en"
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_en.Split_Compound_Word",
+            "init_args": {
+                "connector_tag": "<->"
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.Restore_Entity",
+            "init_args": {
+                "entity_tag": "Person|Organization|Location|Drug|Disease|N"
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.BPE_Apply_Line",
+            "init_args": {
+                "bpe_instance": "$$bpe"
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        }
+      ]
+    }
+  ]
+}

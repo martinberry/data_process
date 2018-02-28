@@ -1,0 +1,138 @@
+{
+  "meta": {
+    "name": "default train rule schema",
+    "version": "1.0",
+    "author": "Liu Wei",
+    "description": "input shall be a mono lang file"
+  },
+
+  "steps": [
+    {
+      "name": "split",
+      "type": "file",
+      "inputs": ["test_data/en-zh.txt"],
+      "rules": [
+        ["rule_common.Split_To_Twin_Files",   {}]
+      ],
+      "outputs": ["en", "zh"]
+    },
+    {
+      "name": "clean en",
+      "type": "line",
+      "replace_empty_line": "REMOVETHISLINE",
+      "inputs": ["en"],
+      "rules": [
+        ["rule_common.Remove_Single_Quotation",       {}],
+        ["rule_common.Norm_Ellipsis",                 {}],
+        ["rule_common.Remove_Square_Content",         {}],
+        ["rule_common.Remove_Redundant_Spaces",       {}],
+        ["rule_common.Remove_Empty_Line",             {}],
+        ["rule_en.Remove_Bullet",                     {}],
+        ["rule_en.Replace_Chinese_Single_Quotation",  {}],
+        ["rule_en.Remove_Punctuation",                {}],
+        ["rule_en.Remove_Between_QuesMark",           {}],
+        ["rule_en.Remove_Contain_Chinese",            {}],
+        ["rule_common.Remove_Redundant_Spaces",       {}],
+        ["rule_common.To_Lower",                      {}],
+        ["rule_en.Remove_Line_Less_Char",             {}],
+        ["rule_common.Segment_Jieba",                 {}],
+        ["rule_common.Remove_Redundant_Spaces",       {}],
+        ["rule_common.To_Lower",                      {}]
+      ],
+      "outputs": ["en.line.clean", "en.remove"]
+    },
+    {
+      "disable": 1,
+      "name": "apply en tokenizer",
+      "type": "file",
+      "inputs": ["en.line.clean0"],
+      "rules": [
+        ["rule_common.General_Tokenizer",     {"lang": "en"}]
+      ],
+      "outputs": ["en.line.clean"]
+    },
+    {
+      "name": "clean zh",
+      "type": "line",
+      "replace_empty_line": "REMOVETHISLINE",
+      "inputs": ["zh"],
+      "rules": [
+        ["rule_common.Remove_Single_Quotation",       {}],
+        ["rule_common.Norm_Ellipsis",                 {}],
+        ["rule_common.Remove_Square_Content",         {}],
+        ["rule_common.Remove_Redundant_Spaces",       {}],
+        ["rule_common.Remove_Empty_Line",             {}],
+        ["rule_zh.Remove_Bullet",                     {}],
+        ["rule_zh.Norm_Name",                         {}],
+        ["rule_zh.Remove_Translator_Note",            {}],
+        ["rule_zh.Remove_Pic_Note",                   {}],
+        ["rule_zh.Remove_Punctuation",                {}],
+        ["rule_common.Remove_Redundant_Spaces",       {}],
+        ["rule_common.To_Lower",                      {}],
+        ["rule_zh.Remove_Line_Less_Char",             {}],
+        ["rule_common.Segment_Jieba",                 {}]
+      ],
+      "outputs": ["zh.line.clean", "zh.remove"]
+    },
+    {
+      "name": "final clean",
+      "type": "file",
+      "inputs": ["en.line.clean", "zh.line.clean"],
+      "rules": [
+        ["rule_common.Combine_Twin_Files",            {}],
+        ["rule_common.Remove_Lines_With_Content",     {"content": "REMOVETHISLINE"}],
+        ["rule_common.Sort",                          {}],
+        ["rule_common.Uniq",                          {}],
+        ["rule_common.Split_To_Twin_Files",           {}]
+      ],
+      "outputs": ["en.clean", "zh.clean"]
+    },
+    {
+      "name": "build en train set: create voc",
+      "type": "file",
+      "inputs": ["en.clean"],
+      "rules": [
+        ["rule_common.Statistic_Word_Vocab",  {}],
+        ["rule_common.Sort",                  {"reverse": 1, "num_sort": 1}],
+        ["rule_common.Insert_Line",           {"line_num": 1, "content": "0\t_UNK"}],
+        ["rule_common.Cut_Lines",             {"start": 1, "end": 50000}],
+        ["rule_common.Split_To_Twin_Files",   {}]
+      ],
+      "outputs": ["_", "en.w2i"]
+    },
+    {
+      "name": "build en train set: convert to ids",
+      "type": "file",
+      "inputs": ["en.clean", "en.w2i"],
+      "rules": [
+        ["rule_common.Words_To_Tokens",       {}]
+      ],
+      "outputs": ["en.ids"]
+    },
+    {
+      "name": "build zh train set: create voc",
+      "type": "file",
+      "inputs": ["zh.clean"],
+      "rules": [
+        ["rule_common.Statistic_Word_Vocab",  {}],
+        ["rule_common.Sort",                  {"reverse": 1, "num_sort": 1}],
+        ["rule_common.Insert_Line",           {"line_num": 1, "content": "0\t_UNK"}],
+        ["rule_common.Cut_Lines",             {"start": 1, "end": 60000}],
+        ["rule_common.Split_To_Twin_Files",   {}]
+      ],
+      "outputs": ["_", "zh.w2i"]
+    },
+    {
+      "name": "build zh train set: convert to ids",
+      "type": "file",
+      "inputs": ["zh.clean", "zh.w2i"],
+      "rules": [
+        ["rule_common.Words_To_Tokens",       {}]
+      ],
+      "outputs": ["zh.ids"]
+    }
+  ],
+
+  "final_outputs": ["en.clean", "en.remove", "en.ids", "en.w2i",
+                    "zh.clean", "zh.remove", "zh.ids", "zh.w2i"]
+}

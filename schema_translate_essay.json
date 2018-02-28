@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "name": "tran a essay",
+    "version": "1.0",
+    "author": "Du SiXing",
+    "description": "translate a essay"
+  },
+
+  "steps": [
+    {
+      "name": "pre clean",
+      "type": "file",
+      "replace_empty_line": "",
+      "inputs": [""],
+      "rules": [
+        ["rule_en.Segment_EN_Doc_To_Sentences",     {}]
+      ],
+      "outputs":["1_to_sentence"]
+    },
+    {
+      "name": "clean en",
+      "type": "line",
+      "replace_empty_line": "REMOVETHISLINE",
+      "inputs": ["1_to_sentence"],
+      "rules": [
+        ["rule_en.Replace_Chinese_Punctuation",       {}],
+        ["rule_common.Remove_Single_Quotation_v2",    {}],
+        ["rule_en.Remove_Contain_Chinese",            {}],
+        ["rule_en.Dedupe_Repeated_Punctuation",       {}],
+        ["rule_en.Remove_Bullet_v2",                  {}],
+        ["rule_common.Remove_Redundant_Spaces",       {}],
+        ["rule_common.Remove_Bad_Begin",              {}],
+        ["rule_common.Remove_Special_Chars",          {}],
+        ["rule_common.To_Lower",                      {}]
+      ],
+      "outputs": ["2_en.line.clean", "en.remove"]
+    },
+    {
+      "name": "apply en tokenizer",
+      "type": "file",
+      "inputs": ["2_en.line.clean"],
+      "rules": [
+        ["rule_common.General_Tokenizer",             {"lang": "en"}]
+      ],
+      "outputs": ["3_en.line.clean.tok"]
+    },
+    {
+      "disable": 0,
+      "name": "translate with Atman",
+      "type": "file",
+      "inputs": ["3_en.line.clean.tok"],
+      "rules": [
+        [
+          "rule_common.Translate_Atman_By_Shell",
+          {
+            "shell_script": "/home/atman-dusixing/WorkDir/TranslateTask/test.round2.sh"
+          }
+        ]
+      ],
+      "outputs": ["4_trans.atman.raw"]
+    },
+    {
+      "name": "split",
+      "type": "file",
+      "inputs": ["4_trans.atman.raw"],
+      "rules": [
+        ["rule_common.Split_To_Twin_Files",   {}]
+      ],
+      "outputs": ["temp", "5_splited"]
+    },
+    {
+      "name": "split",
+      "type": "file",
+      "inputs": ["5_splited"],
+      "rules": [
+        ["rule_common.General_Detokenizer",   {}]
+      ],
+      "outputs": ["6_detokened"]
+    },
+     {
+      "name": "remove spaces",
+      "type": "line",
+      "replace_empty_line": "",
+      "inputs": ["6_detokened"],
+      "rules": [
+         ["rule_zh.Remove_Space",       {}]
+      ],
+      "outputs": ["7_zh.out", "_"]
+    }
+  ],
+  "final_outputs": ["7_zh.out"]
+}

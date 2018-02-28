@@ -1,0 +1,140 @@
+{
+  "meta": {
+    "name": "medical domain EN sentence PRE processing for force alignment in lib mode with context rule",
+    "version": "1.0",
+    "author": "Deng Wang",
+    "description": "for using in lib mode only. $$ is special prefix for refer field in context, which is a dictionary for storing or obtaining value."
+  },
+
+  "steps": [
+    {
+      "name": "pre clean",
+      "type": "context",
+      "rules": [
+        {
+            "name": "rule_common.Pre_Replacing_Rule",
+            "init_args": {
+                "bifrost_instance": "$$bifrost"
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_en.Replace_Chinese_Punctuation",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.Replace_HTML_Entities",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.FullWidth_To_Halfwidth",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.Remove_Bad_Begin",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.Remove_Special_Chars",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.Remove_Redundant_Spaces",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_en.Separate_Currency_Number",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_en.Slot_Tag_Number_v5",
+            "init_args": {
+                "number_tag": "<N>"
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.Remove_Redundant_Spaces",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.General_Sentence_Tokenizer",
+            "init_args": {
+                "lang": "en"
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.Restore_Entity",
+            "init_args": {
+                "entity_tag": "N",
+                "case_sensitive": "True"
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.BPE_Apply_Line",
+            "init_args": {
+                "bpe_instance": "$$bpe"
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        }
+      ]
+    }
+  ]
+}

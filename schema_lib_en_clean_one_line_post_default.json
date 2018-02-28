@@ -1,0 +1,31 @@
+{
+  "meta": {
+    "name": "default POST processing En one line schema for lib mode, for English language",
+    "version": "1.0",
+    "author": "Liu Wei",
+    "description": "for using in lib mode only"
+  },
+
+  "steps": [
+    {
+      "name": "post clean",
+      "type": "sole_line",
+      "replace_empty_line": "",
+      "rules": [
+        ["rule_zh.Replace_Lower_Char_To_Upper_Word_Line",
+          {
+            "upperCharWord":
+            ["data/lower_char_word_list"]
+          }
+        ],
+        ["rule_zh.Find_Word_Entity",
+          {
+            "word_dict":
+            "data/generate_result"
+          }
+        ],
+        ["rule_zh.Remove_Space",       {}]
+      ]
+    }
+  ]
+}

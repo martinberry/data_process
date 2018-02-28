@@ -1,0 +1,7 @@
+<Disease>
+<Drug>
+<Organization>
+<Location>
+<Person>
+<N>
+<->

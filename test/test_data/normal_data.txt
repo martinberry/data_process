@@ -1,0 +1,59 @@
+Cancel changes to this post.	取消对此文章的更改。
+Publish this post to your blog.	将此文章发布到您的博客。
+Save this post as a draft to be published later.	将此文章另存为草稿供以后发布。
+Show data for the previous 30 calendar days.	显示前 30 个日历日的数据。
+Show data for the previous 365 calendar days.	显示前 365 个日历日的数据。
+Show data for the previous calendar day.	显示前一日历日的数据。
+Publish a major version of the selected document.	发布所选文档的主要版本。
+Publish a major version of this page.	发布此页面的主要版本。
+Displays the current paragraph in right to left reading order.	按从右到左的阅读顺序显示当前段落。
+Redo the last action which was undone.	恢复已撤消的上一操作。
+Reload the data to display changes made by other users.	重新加载数据以显示其他用户所做的更改。
+Reject the submission of this page as a major version.	拒绝将此页面作为主要版本进行提交。
+Remove Link formatting from the current selection.	从当前所选内容中删除格式的链接。
+Change the title of this page. The page must be in edit mode.	更改此页面的标题。此页面必须处于编辑模式。
+Relink all forms in this folder and all subfolders to their form template.	将该文件夹及其所有子文件夹的所有表单重新链接到其表单模板。
+Relink the selected forms to their form template.	将所选表单重新链接到其表单模板。
+Send the mobile URL of this document so that you can access it from your mobile phone.	发送此文档的移动 URL，以便您可以通过移动电话访问它。
+Send the mobile URL of this item so that you can access it from your mobile phone.	发送此项目的移动 URL，以便您可以通过移动电话访问它。
+Send the mobile URL of this library so that you can access it from your mobile phone.	发送此库的移动 URL，以便您可以通过移动电话访问它。
+Send the mobile URL of this list so that you can access it from your mobile phone.	发送此列表的移动 URL，以便您可以通过移动电话访问它。
+Send the mobile URL of this page so that you can access it from your mobile phone.	发送此页的移动 URL，以便您可以通过移动电话访问它。
+lt;pgt;Move or copy this file to another location.lt;/pgt;	lt;pgt;移动或复制此文件到其他位置。lt;/pgt;
+Make this page the homepage for this site.	将此页面设置为此网站的主页。
+Open task pane to access additional commands.	打开任务窗格以访问其他命令。
+Display totals underneath each column.	在每栏下显示汇总。
+View and manage list items using the standard list format.	使用标准列表格式查看并管理列表项。
+Copy permissions from parent, and then stop inheriting permissions. Changes made to the parent permissions in the future will not apply.	从父级复制权限，然后停止继承权限。日后对父级权限所做的更改将不会应用。
+Draw a line through the middle of the selected text.	在所选文字的中间画一条线。
+Submit this page for approval as a major version.	将此页面作为主要版本提交以供审批。
+Create small letters below the line of text.	在文字行下方创建小字符。
+Create small letters above the line of text	在文字行上方创建小字符。
+Create a synchronized copy of this library on your computer using SharePoint Workspace.	使用 SharePoint Workspace 在计算机上创建此库的同步副本。
+Create a synchronized copy of this list on your computer using SharePoint Workspace.	使用 SharePoint Workspace 在计算机上创建此列表的同步副本。
+Create or remove columns, headers and footers from the page.	创建或从页面中删除列、页眉和页脚。
+A single column which fills the page horizontally and vertically.	单列，水平和垂直填充页面。
+A large column on the left with a smaller column on the right.	左边列较大，右边列较小。
+Three equally sized columns.	三列，大小相同。
+Three equally sized columns with a header that spans all three.	三列，大小相同，页眉横跨三列。
+Three equally sized columns with a header and footer that span all three.	三列，大小相同，页眉和页脚横跨三列。
+Two equally sized columns.	两列，大小相同。
+Two equally sized columns with a header that spans both.	两列，大小相同，页眉横跨两列。
+Two equally sied columns with a header and footer that span both.	两列，大小相同，页眉和页脚横跨两列。
+Align to the top center of the current line of text.	将当前文本行靠上居中对齐。
+Align to the top left of the current line of text.	将当前文本行靠上左对齐。
+Align to the top right of the current line of text.	将当前文本行靠上右对齐。
+Underline the selected text.	给所选文字加下划线。
+Undo the last action.	撤消上一操作。
+Unpublish the current version of the selected document.	取消发布所选文档的当前版本。
+Make the current major version of this page into a minor version.	将此页面的当前主要版本设置为主要版本。
+Upload a document from your computer to this library.	将计算机中的一个文档上载到此库中。
+Upload multiple documents from your computer to this library.	将计算机中的多个文档上载到此库中。
+Go to the Version Difference page to view text changes made between previous versions of this page.	转至“版本差异”页面以查看此页面的早期版本之间所做的文本更改。
+Go to the Version History page to view and manage previous versions of this page.	转至“版本历史记录”页面以查看和管理此页面的早期版本。
+Go to this pages library to see all pages in the library.	转至此页的库以查看库中的所有页面。
+Open this document in read only mode.	在只读模式下打开此文档。
+View the properties of the selected document.	查看所选文档的属性。
+View the selected event.	查看所选事件。
+View the selected item.	查看所选项目。
+View the metadata properties of this page.	查看此页面的元数据属性。

@@ -1,0 +1,47 @@
+{
+  "meta": {
+    "name": "default fast alignment schema",
+    "version": "1.0",
+    "author": "Liu Wei",
+    "description": "need to pass train set files from --infile en.txt zh.txt or inputs below, it's better to use training set outputs directly in order to keep consistant. output will be two files: one is a pkl contains dict of mapping source word -> [target words], another is the reverse sorted words file according to word freq which could be used to fetch topn words when decoding"
+  },
+
+  "steps": [
+    {
+      "name": "fast align",
+      "type": "file",
+      "inputs": ["data/align/train.en.txt", "data/align/train.zh.txt"],
+      "rules": [
+        ["rule_common.Combine_Twin_Files",  {"delim": " ||| "}],
+        ["rule_common.Select_Output",       {"index": [0], "output": ["formatted_data.txt"]}],
+        ["rule_common.Fast_Align",          {}]
+      ],
+      "outputs": ["prob.table", "forward.align"]
+    },
+    {
+      "name": "convert prob table to pkl",
+      "type": "file",
+      "inputs": ["prob.table"],
+      "rules": [
+        ["rule_common.WordProb_To_PKL",     {}]
+      ],
+      "outputs": ["word_align.pkl"]
+    },
+    {
+      "name": "convert prob table to pkl",
+      "type": "file",
+      "inputs": ["/home/liuwei/proj/data-process/data_process/data/align/train.zh.txt"],
+      "rules": [
+        ["rule_common.Statistic_Word_Vocab",  {}],
+        ["rule_common.Sort",                  {"reverse": 1, "num_sort": 1}],
+        ["rule_common.Insert_Line",           {"line_num": 1, "content": "0\t_UNK"}],
+        ["rule_common.Split_To_Twin_Files",   {}],
+        ["rule_common.Select_Output",         {"index": [1], "output": ["top.words"]}],
+        ["rule_common.WordList_To_PKL",       {}]
+      ],
+      "outputs": ["word_top.pkl"]
+    }
+  ],
+
+  "final_outputs": ["prob.table", "word_align.pkl", "word_top.pkl"]
+}

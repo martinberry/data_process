@@ -1,0 +1,30 @@
+{
+  "meta": {
+    "name": "default processing En one line schema for lib mode, for English language",
+    "version": "1.0",
+    "author": "Liu Wei",
+    "description": "for using in lib mode only"
+  },
+
+  "steps": [
+    {
+      "name": "clean",
+      "type": "sole_line",
+      "replace_empty_line": "",
+      "rules": [
+        ["rule_common.Remove_Single_Quotation",       {}],
+        ["rule_common.Norm_Ellipsis",                 {}],
+        ["rule_common.Remove_Square_Content",         {}],
+        ["rule_common.Remove_Redundant_Spaces",       {}],
+        ["rule_en.Remove_Bullet",                     {}],
+        ["rule_en.Replace_Chinese_Single_Quotation",  {}],
+        ["rule_en.Remove_Punctuation",                {}],
+        ["rule_en.Remove_Between_QuesMark",           {}],
+        ["rule_common.Remove_Redundant_Spaces",       {}],
+        ["rule_common.Segment_Jieba",                 {}],
+        ["rule_common.Remove_Redundant_Spaces",       {}],
+        ["rule_common.To_Lower",                      {}]
+      ]
+    }
+  ]
+}

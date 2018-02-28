@@ -1,0 +1,111 @@
+{
+  "meta": {
+    "name": "sk/sl data pre-process schema",
+    "version": "1.0",
+    "author": "Deng Wang",
+    "description": "for using in lib mode only.  $$ is special prefix for refer field in context, which is a dictionary for storing or obtaining value."
+  },
+
+  "steps": [
+    {
+      "name": "pre clean",
+      "type": "context",
+      "rules": [
+        {
+            "name": "rule_common.Pre_Replacing_Rule",
+            "init_args": {
+                "bifrost_instance": "$$bifrost"
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_en.Replace_Chinese_Punctuation",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.Remove_Redundant_Spaces",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.Remove_Bad_Begin",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.Remove_Special_Chars",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_en.Separate_Currency_Number",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.Remove_Redundant_Spaces",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_en.Capitalize",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.General_Sentence_Tokenizer",
+            "init_args": {
+                "lang": "en"
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.BPE_Apply_Line",
+            "init_args": {
+                "bpe_instance": "$$bpe"
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        }
+      ]
+    }
+  ]
+}
+

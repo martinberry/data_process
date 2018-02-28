@@ -1,0 +1,84 @@
+{
+  "meta": {
+    "name": "default train rule schema",
+    "version": "1.0",
+    "author": "Liu Wei",
+    "description": "input shall be a mono lang file"
+  },
+
+  "steps": [
+    {
+      "name": "split",
+      "type": "file",
+      "inputs": ["test_data/en-zh.txt"],
+      "rules": [
+        ["rule_common.Split_To_Twin_Files",   {}]
+      ],
+      "outputs": ["en", "zh"]
+    },
+    {
+      "name": "clean en",
+      "type": "line",
+      "replace_empty_line": "REMOVETHISLINE",
+      "inputs": ["en"],
+      "rules": [
+        ["rule_common.Remove_Single_Quotation",       {}],
+        ["rule_common.Norm_Ellipsis",                 {}],
+        ["rule_common.Remove_Square_Content",         {}],
+        ["rule_common.Remove_Redundant_Spaces",       {}],
+        ["rule_common.Remove_Empty_Line",             {}],
+        ["rule_en.Remove_Bullet",                     {}],
+        ["rule_en.Replace_Chinese_Single_Quotation",  {}],
+        ["rule_en.Remove_Between_QuesMark",           {}],
+        ["rule_en.Remove_Contain_Chinese",            {}],
+        ["rule_common.Remove_Redundant_Spaces",       {}]
+      ],
+      "outputs": ["en.line.clean", "en.remove"]
+    },
+    {
+      "name": "clean zh",
+      "type": "line",
+      "replace_empty_line": "REMOVETHISLINE",
+      "inputs": ["zh"],
+      "rules": [
+        ["rule_common.Remove_Single_Quotation",       {}],
+        ["rule_common.Norm_Ellipsis",                 {}],
+        ["rule_common.Remove_Square_Content",         {}],
+        ["rule_common.Remove_Redundant_Spaces",       {}],
+        ["rule_common.Remove_Empty_Line",             {}],
+        ["rule_zh.Remove_Bullet",                     {}],
+        ["rule_zh.Norm_Name",                         {}],
+        ["rule_zh.Remove_Translator_Note",            {}],
+        ["rule_zh.Remove_Pic_Note",                   {}],
+        ["rule_zh.Remove_Punctuation",                {}],
+        ["rule_common.Remove_Redundant_Spaces",       {}]
+      ],
+      "outputs": ["zh.line.clean", "zh.remove"]
+    },
+    {
+      "name": "final clean",
+      "type": "file",
+      "inputs": ["en.line.clean", "zh.line.clean"],
+      "rules": [
+        ["rule_common.Combine_Twin_Files",            {}],
+        ["rule_common.Remove_Lines_With_Content",     {"content": "REMOVETHISLINE"}],
+        ["rule_common.Sort",                          {}],
+        ["rule_common.Uniq",                          {}],
+        ["rule_common.Split_To_Twin_Files",           {}]
+      ],
+      "outputs": ["en.clean", "zh.clean"]
+    },
+    {
+      "name": "create zh ref",
+      "type": "line",
+      "replace_empty_line": "",
+      "inputs": ["zh.clean"],
+      "rules": [
+        ["rule_zh.Segment_Jieba_Then_Char",     {}]
+      ],
+      "outputs": ["zh.ref", "_"]
+    }
+  ],
+
+  "final_outputs": ["en.clean", "zh.clean", "zh.ref"]
+}

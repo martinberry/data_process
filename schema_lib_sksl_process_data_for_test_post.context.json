@@ -1,0 +1,55 @@
+{
+  "meta": {
+    "name": "sk/sl post-process schema",
+    "version": "1.0",
+    "author": "Deng",
+    "description": "for using in lib mode only.  $$ is special prefix for refer field in context, which is a dictionary for storing or obtaining value."
+  },
+
+  "steps": [
+    {
+      "name": "post clean",
+      "type": "context",
+      "rules": [
+        {
+            "name": "rule_common.BPE_Recover",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.General_Sentence_Detokenizer",
+            "init_args": {
+                "lang": "en"
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.Post_Replacing_Rule",
+            "init_args": {
+                "bifrost_instance": "$$bifrost"
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_zh.Remove_Space",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "meta": {
+    "name": "default voc and token id rule schema",
+    "version": "1.0",
+    "author": "Liu Wei",
+    "description": ""
+  },
+
+  "inputs": [
+    "/home/liuwei/proj/data/data/fin_stock/work_clean/en.final.5.1",
+    "/home/liuwei/proj/data/data/fin_stock/work_clean/zh.final.5.1"
+  ],
+
+  "steps": [
+    {
+      "disable": 0,
+      "name": "build en train set: create voc",
+      "type": "file",
+      "inputs": ["en.final.5.1"],
+      "rules": [
+        ["rule_common.Statistic_Word_Vocab",  {}],
+        ["rule_common.Sort",                  {"reverse": 1, "num_sort": 1}],
+        ["rule_common.Insert_Line",           {"line_num": 1, "content": "3\t_UNK"}],
+        ["rule_common.Insert_Line",           {"line_num": 1, "content": "2\t_EOS"}],
+        ["rule_common.Insert_Line",           {"line_num": 1, "content": "1\t_GO"}],
+        ["rule_common.Insert_Line",           {"line_num": 1, "content": "0\t_PAD"}],
+        ["rule_common.Split_To_Twin_Files",   {}]
+      ],
+      "outputs": ["_", "en.w2i.full"]
+    },
+    {
+      "disable": 0,
+      "name": "top en w2i",
+      "type": "file",
+      "inputs": ["en.w2i.full"],
+      "rules": [
+        ["rule_common.Cut_Lines",             {"start": 1, "end": 40000}]
+      ],
+      "outputs": ["en.w2i.top"]
+    },
+    {
+      "disable": 0,
+      "name": "rare en w2i",
+      "type": "file",
+      "inputs": ["en.w2i.full"],
+      "rules": [
+        ["rule_common.Cut_Lines",             {"start": 40001, "end": 9000000}]
+      ],
+      "outputs": ["en.w2i.rare"]
+    },
+    {
+      "disable": 1,
+      "name": "build en train set: convert to ids",
+      "type": "file",
+      "inputs": ["train.en-bd.wc", "en.w2i.wc.full"],
+      "rules": [
+        ["rule_common.Words_To_Tokens",       {}]
+      ],
+      "outputs": ["train.en-bd.wc.ids"]
+    },
+    {
+      "disable": 0,
+      "name": "build zh train set: create voc",
+      "type": "file",
+      "inputs": ["zh.final.5.1"],
+      "rules": [
+        ["rule_common.Statistic_Word_Vocab",  {}],
+        ["rule_common.Sort",                  {"reverse": 1, "num_sort": 1}],
+        ["rule_common.Insert_Line",           {"line_num": 1, "content": "3\t_UNK"}],
+        ["rule_common.Insert_Line",           {"line_num": 1, "content": "2\t_EOS"}],
+        ["rule_common.Insert_Line",           {"line_num": 1, "content": "1\t_GO"}],
+        ["rule_common.Insert_Line",           {"line_num": 1, "content": "0\t_PAD"}],
+        ["rule_common.Split_To_Twin_Files",   {}]
+      ],
+      "outputs": ["_", "zh.w2i.full"]
+    },
+    {
+      "disable": 0,
+      "name": "top zh w2i",
+      "type": "file",
+      "inputs": ["zh.w2i.full"],
+      "rules": [
+        ["rule_common.Cut_Lines",             {"start": 1, "end": 40000}]
+      ],
+      "outputs": ["zh.w2i.top"]
+    },
+    {
+      "disable": 0,
+      "name": "rare zh w2i",
+      "type": "file",
+      "inputs": ["zh.w2i.full"],
+      "rules": [
+        ["rule_common.Cut_Lines",             {"start": 40001, "end": 9000000}]
+      ],
+      "outputs": ["zh.w2i.rare"]
+    },
+    {
+      "disable": 1,
+      "name": "build zh train set: convert to ids",
+      "type": "file",
+      "inputs": ["train.zh-bd.wc", "zh.w2i.wc.full"],
+      "rules": [
+        ["rule_common.Words_To_Tokens",       {}]
+      ],
+      "outputs": ["train.zh-bd.wc.ids"]
+    }
+  ],
+
+  "final_outputs": ["en.w2i.full", "en.w2i.top", "en.w2i.rare", "zh.w2i.full", "zh.w2i.top", "zh.w2i.rare"]
+}

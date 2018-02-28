@@ -1,0 +1,111 @@
+{
+  "meta": {
+    "name": "translation POST processing and align source with target for lib mode",
+    "version": "1.0",
+    "author": "Zhiwei Peng",
+    "description": "for using in lib mode only.  $$ is special prefix for refer field in context, which is a dictionary for storing or obtaining value."
+  },
+
+  "steps": [
+    {
+      "name": "post align",
+      "type": "context",
+      "rules": [
+        {
+            "name": "rule_common.BPE_Recover",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.General_Sentence_Detokenizer",
+            "init_args": {
+                "lang": "en"
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_common.Align_Sentence_Detokenizer",
+            "init_args": {
+                "lang": "en", "mode": "nltk_mosestokenizer"
+            },
+            "run_params": {
+                "align_enabled": "$$align_enabled",
+                "tgt_origin": "$$tgt_array",
+                "src_origin": "$$src_array"
+            },
+            "run_outputs": ["tgt_origin", "src_origin"]
+        },
+        {
+            "name": "rule_common.Align_Target_Source",
+            "init_args": {
+            },
+            "run_params": {
+                "align_enabled": "$$align_enabled",
+                "tgt_array": "$$tgt_origin",
+                "src_array": "$$src_origin",
+                "tgt_src_mapping": "$$tgt_src_mapping"
+            },
+            "run_outputs": ["target", "source", "mapping"]
+        },
+        {
+            "name": "rule_zh.Correct_En_Word_Case",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line",
+                "raw_line": "$$raw_line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_zh.Align_Correct_En_Word_Case",
+            "init_args": {
+            },
+            "run_params": {
+                "align_enabled": "$$align_enabled",
+                "line" : "$$target",
+                "raw_line" : "$$raw_line"
+            },
+            "run_outputs": ["target"]
+        },
+        {
+            "name": "rule_en.Align_Correct_En_Word_Case",
+            "init_args": {
+            },
+            "run_params": {
+                "align_enabled": "$$align_enabled",
+                "line" : "$$source",
+                "raw_line" : "$$raw_line"
+            },
+            "run_outputs": ["source"]
+        },
+        {
+            "name": "rule_common.Post_Replacing_Rule",
+            "init_args": {
+                "bifrost_instance": "$$bifrost"
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        },
+        {
+            "name": "rule_zh.Remove_Space",
+            "init_args": {
+            },
+            "run_params": {
+                "line": "$$line"
+            },
+            "run_outputs": ["line"]
+        }
+      ]
+    }
+  ]
+}

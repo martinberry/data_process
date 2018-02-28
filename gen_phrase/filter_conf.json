@@ -1,0 +1,35 @@
+
+{
+    "meta":
+        {
+            "version"      : 1.0,
+            "date"         : "2017-07-31",
+            "author"       : "zhangminghua",
+            "name"         : "filter_phrase_pairs",
+            "data_process" : "/home/zhangminghua/work/common/data-process/data_process"
+        },
+
+    "filter":
+        {
+            "debug" : true,
+            "rules" : 
+            [
+                ["multi_align",{"multi_src_th":0.5, "multi_trg_th":0.5}],
+                ["en_no_en", {}],
+                ["zh_no_zh", {}],
+                ["en_has_zhPunc", {}],
+                ["zh_has_enPunc", {}],
+                ["start_with_Punc", {}],
+                ["zh_start_with_special", {}],
+                ["en_end_with_special", {}],
+                ["en_paren_mismatch", {}],
+                ["zh_paren_mismatch", {}],
+                ["ptr_sum_low", {"ptr_sum_th":1.2}],
+                ["ptr_or_low", {"ptr_src_th":0.5, "ptr_trg_th":0.5}],
+                ["lexicalW_zero", {}],
+                ["len_diff", {"ratio_bound":2.5}]
+            ]
+        }
+}
+
+

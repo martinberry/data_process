@@ -1,0 +1,87 @@
+{
+  "meta": {
+    "name": "train finance data",
+    "version": "1.0",
+    "author": "Du Sixing",
+    "description": "the input is a file with two columns: English sentence\tChinese sentence"
+  },
+  "steps": [
+    {
+      "name": "split the files content to En and Zh",
+      "type": "file",
+      "inputs": ["finance.train"],
+      "rules": [
+        ["rule_common.Split_To_Twin_Files", {}]
+      ],
+      "outputs": ["en", "zh"]
+    },
+    {
+      "name": "clean en",
+      "type": "line",
+      "replace_empty_line": "REMOVETHISLINE",
+      "inputs":["en"],
+      "rules": [
+        ["rule_en.Remove_Contain_Chinese",{}],
+        ["rule_en.Remove_Not_Contain_Number_Or_Aphabet",{}],
+        ["rule_en.Remove_Bullet_v2",{}],
+        ["rule_en.Remove_Punctuation_v2",{}],
+        ["rule_en.Replace_Chinese_Punctuation",{}],
+        ["rule_common.Remove_Consecutive_Dash_Or_Underscore",{}],
+        ["rule_common.To_Lower",{}]
+      ],
+      "outputs":["en_clean","en_clean_remove"]
+    },
+    {
+      "name": "clean zh",
+      "type": "line",
+      "replace_empty_line": "REMOVETHISLINE",
+      "inputs":["zh"],
+      "rules": [
+        ["rule_zh.Remove_Not_Contain_Chinese",{}],
+        ["rule_zh.Remove_Bullet_v2",{}],
+        ["rule_zh.Remove_Punctuation_v2",{}],
+        ["rule_zh.Remove_Chinese_Single_Quotation",{}],
+        ["rule_common.Remove_Consecutive_Dash_Or_Underscore",{}],
+        ["rule_common.To_Lower",{}]
+      ],
+      "outputs":["zh_clean","zh_clean_remove"]
+    },
+    {
+      "name":"Using jieba lib to segment english sentence",
+      "type":"line",
+      "replace_empty_line":"REMOVETHISLINE",
+      "inputs":["en_clean"],
+      "rules":[
+        ["rule_common.Segment_Jieba",{}],
+        ["rule_common.Remove_Redundant_Spaces",{}]
+      ],
+      "outputs":["en_jieba_seg","temp_en_jieba_seg"]
+    },
+     {
+      "name":"Using jieba lib to segment chinese sentence",
+      "type":"line",
+      "replace_empty_line":"REMOVETHISLINE",
+      "inputs":["zh_clean"],
+      "rules":[
+        ["rule_common.Segment_Jieba",{}],
+        ["rule_common.Remove_Redundant_Spaces",{}]
+      ],
+       "outputs":["zh_jieba_seg","temp_zh_jieba_seg"]
+    },
+    {
+      "name":"Combine two files to One file",
+      "type":"file",
+      "inputs":["en_jieba_seg","zh_jieba_seg"],
+      "rules":[
+        ["rule_common.Combine_Twin_Files",{}],
+        ["rule_common.Remove_Lines_With_Content",     {"content": "REMOVETHISLINE"}],
+        ["rule_common.Sort",{}],
+        ["rule_common.Uniq",{}],
+        ["rule_common.Split_To_Twin_Files",{}]
+      ],
+      "outputs":["final_en","final_zh"]
+    }
+  ],
+
+  "final_outputs": ["en", "zh","en_clean","zh_clean","en_jieba_seg","zh_jieba_seg","final_en","final_zh"]
+}

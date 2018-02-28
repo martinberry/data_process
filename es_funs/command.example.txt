@@ -1,0 +1,5 @@
+Inject sentence:
+python batch_es_injection.sentence.py -s 192.168.1.151 -i medical.sentence -t sentence -f ./sentences.test.txt
+
+Query sentence:
+python find_topn_sentences.py medical.sentence "who are you" 10 OR 

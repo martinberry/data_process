@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "name": "translate a doc",
+    "version": "1.0",
+    "author": "Liu Wei",
+    "description": "translate a doc with specified doc and merge with GBB results for comparing"
+  },
+
+  "steps": [
+    {
+      "name": "translate with Bing",
+      "type": "file",
+      "inputs": ["doc.sens"],
+      "rules": [
+        ["rule_common.Translate_3rd_Party",  {"engine": "bing", "from": "en", "to": "zh"}]
+      ],
+      "outputs": ["trans.txt"]
+    }
+  ],
+
+  "final_outputs": ["trans.txt"]
+}

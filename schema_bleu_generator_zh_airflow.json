@@ -1,0 +1,43 @@
+{
+  "meta": {
+    "name": "default BLEU schema, for Chinese language",
+    "version": "1.0",
+    "author": "Zhiwei Peng",
+    "description": "need pass hypo file from --infile, and put reference in this schema. result is outputed to both stdout and a file"
+  },
+
+  "steps": [
+     {
+      "name": "clean candidate",
+      "type": "line",
+      "replace_empty_line": "",
+      "inputs": ["candidate.txt"],
+      "rules": [
+        ["rule_zh.Segment_Jieba_Then_Char",     {}]
+      ],
+      "outputs": ["candidate.char", "_"]
+    },
+    {
+      "name": "clean reference",
+      "type": "line",
+      "replace_empty_line": "",
+      "inputs": ["reference.txt"],
+      "rules": [
+        ["rule_zh.Segment_Jieba_Then_Char",     {}]
+      ],
+      "outputs": ["reference.char", "_"]
+    },
+    {
+      "name": "bleu",
+      "type": "file",
+      "inputs": ["candidate.char", "reference.char"],
+      "rules": [
+        ["rule_common.BleuGeneratorAirflow",    {}],
+        ["rule_common.Sort",                    {"num_sort": 1}]
+      ],
+      "outputs": ["bleu.result"]
+    }
+  ],
+
+  "final_outputs": ["bleu.result", "candidate.char", "reference.char"]
+}

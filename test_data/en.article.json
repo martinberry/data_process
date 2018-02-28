@@ -1,0 +1,16 @@
+{
+  "source": "http://www.example.com",
+  "lang": "en",
+  "original_doc": {
+    "date": "20160901",
+    "title": "",
+    "publication_date": "",
+    "body": {
+      "paragraphs": [
+        "Boris Johnson has promised to reshape Britain as a “great global player” as he entered the Foreign Office, but some European politicians reacted to his appointment with dismay.",
+        "Mr Johnson proved a successful and energetic ambassador for London during his time as mayor, embarking on a series of overseas trips to drum up investment.",
+        "In France, Jean-Marc Ayrault, foreign minister, said he needed a “clear, credible, trustworthy partner” to negotiate a Brexit. “I am not at all worried about Boris Johnson, but . . . during the campaign he lied a lot to the British people and now it is he who has his back against the wall,” he added."
+      ]
+    }
+  }
+}

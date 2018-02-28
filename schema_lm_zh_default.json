@@ -1,0 +1,61 @@
+{
+  "meta": {
+    "name": "default LM rule schema, for Chinese language",
+    "version": "1.0",
+    "author": "Liu Wei",
+    "description": "input shall be a mono lang file"
+  },
+
+  "steps": [
+    {
+      "name": "clean",
+      "type": "line",
+      "replace_empty_line": "",
+      "inputs": ["test_data/zh.txt"],
+      "rules": [
+        ["rule_common.Remove_Single_Quotation", {}],
+        ["rule_common.Norm_Ellipsis",           {}],
+        ["rule_common.Remove_Square_Content",   {}],
+        ["rule_common.Remove_Redundant_Spaces", {}],
+        ["rule_common.Remove_Empty_Line",       {}],
+        ["rule_zh.Remove_Bullet",               {}],
+        ["rule_zh.Norm_Name",                   {}],
+        ["rule_zh.Remove_Translator_Note",      {}],
+        ["rule_zh.Remove_Pic_Note",             {}],
+        ["rule_zh.Remove_Punctuation",          {}],
+        ["rule_common.Remove_Redundant_Spaces", {}],
+        ["rule_common.Entity_URL",              {}],
+        ["rule_common.To_Lower",                {}],
+        ["rule_zh.Remove_Line_Less_Char",       {}],
+        ["rule_zh.Segment_Jieba_Then_Char",     {}]
+      ],
+      "outputs": ["zh.clean", "zh.remove"]
+    },
+    {
+      "name": "build: create voc",
+      "type": "file",
+      "inputs": ["zh.clean"],
+      "rules": [
+        ["rule_common.Sort",                  {}],
+        ["rule_common.Uniq",                  {}],
+        ["rule_common.Statistic_Word_Vocab",  {}],
+        ["rule_common.Sort",                  {"reverse": 1, "num_sort": 1}],
+        ["rule_common.Insert_Line",           {"line_num": 1, "content": "0\t_UNK"}],
+        ["rule_common.Cut_Lines",             {"start": 1, "end": 18000}],
+        ["rule_common.Split_To_Twin_Files",   {}]
+      ],
+      "outputs": ["_", "zh.w2i"]
+    },
+    {
+      "name": "build: convert to ids",
+      "type": "file",
+      "inputs": ["zh.clean", "zh.w2i"],
+      "rules": [
+        ["rule_common.Words_To_Tokens",       {}]
+      ],
+      "outputs": ["zh.ids"]
+    }
+  ],
+
+  "final_outputs": ["zh.ids", "zh.remove", "zh.w2i"]
+}

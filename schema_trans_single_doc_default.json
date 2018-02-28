@@ -1,0 +1,136 @@
+{
+  "meta": {
+    "name": "translate a doc",
+    "version": "1.0",
+    "author": "Liu Wei",
+    "description": "translate a doc with specified doc and merge with GBB results for comparing"
+  },
+
+  "steps": [
+    {
+      "name": "general clean",
+      "type": "line",
+      "replace_empty_line": "",
+      "inputs": ["test_data/en.article"],
+      "rules": [
+        ["rule_common.Remove_Single_Quotation",       {}],
+        ["rule_common.Norm_Ellipsis",                 {}],
+        ["rule_common.Remove_Square_Content",         {}],
+        ["rule_common.Remove_Redundant_Spaces",       {}],
+        ["rule_en.Remove_Bullet",                     {}],
+        ["rule_en.Replace_Chinese_Single_Quotation",  {}],
+        ["rule_en.Remove_Punctuation",                {}],
+        ["rule_en.Remove_Between_QuesMark",           {}],
+        ["rule_common.Remove_Redundant_Spaces",       {}]
+      ],
+      "outputs": ["doc.clean", "_"]
+    },
+    {
+      "name": "split doc to sentences",
+      "type": "file",
+      "inputs": ["doc.clean"],
+      "rules": [
+        ["rule_en.Segment_EN_Doc_To_Sentences",  {}]
+      ],
+      "outputs": ["doc.sens"]
+    },
+    {
+      "name": "Segment & tokenize for Atman",
+      "type": "line",
+      "replace_empty_line": "",
+      "inputs": ["doc.sens"],
+      "rules": [
+        ["rule_common.Segment_Jieba",                 {}],
+        ["rule_common.Remove_Redundant_Spaces",       {}],
+        ["rule_common.To_Lower",                      {}]
+      ],
+      "outputs": ["doc.sens.clean", "_"]
+    },
+    {
+      "disable": 0,
+      "name": "translate with Atman",
+      "type": "file",
+      "inputs": ["doc.sens.clean"],
+      "rules": [
+        [
+          "rule_common.Translate_Atman",
+          {
+            "script": "/home/liuwei/proj/NeuralMachineTranslation/cover-test.py",
+            "model": "/home/liuwei/proj/NeuralMachineTranslation/data/coverage_emb/model-coverage-745000.npz",
+            "x_voc": "/home/liuwei/proj/NeuralMachineTranslation/data/coverage_emb/en.vocab50000.txt",
+            "y_voc": "/home/liuwei/proj/NeuralMachineTranslation/data/coverage_emb/zh.vocab60000.txt"
+          }
+        ]
+      ],
+      "outputs": ["trans.atman.raw"]
+    },
+    {
+      "name": "Remove spaces from word segment",
+      "type": "file",
+      "inputs": ["trans.atman.raw"],
+      "rules": [
+        ["rule_common.Replace_Content",         {"pattern": " ", "repl": ""}]
+      ],
+      "outputs": ["trans.atman.out"]
+    },
+    {
+      "name": "split to w/ unk and w/o unk (refilled) files",
+      "type": "file",
+      "inputs": ["trans.atman.out"],
+      "rules": [
+        ["rule_common.Split_To_Twin_Files",           {}]
+      ],
+      "outputs": ["trans.atman.unk", "trans.atman"]
+    },
+    {
+      "name": "tidy Atman translation result",
+      "type": "file",
+      "inputs": ["trans.atman"],
+      "rules": [
+        ["rule_common.Tidy_Translated_Result",  {}]
+      ],
+      "outputs": ["trans.atman.tidy"]
+    },
+    {
+      "disable": 0,
+      "name": "translate with Baidu",
+      "type": "file",
+      "inputs": ["doc.sens"],
+      "rules": [
+        ["rule_common.Translate_3rd_Party",  {"engine": "baidu", "from": "en", "to": "zh"}]
+      ],
+      "outputs": ["trans.baidu"]
+    },
+    {
+      "disable": 0,
+      "name": "translate with Bing",
+      "type": "file",
+      "inputs": ["doc.sens"],
+      "rules": [
+        ["rule_common.Translate_3rd_Party",  {"engine": "bing", "from": "en", "to": "zh"}]
+      ],
+      "outputs": ["trans.bing"]
+    },
+    {
+      "disable": 1,
+      "name": "translate with Google",
+      "type": "file",
+      "inputs": ["doc.sens"],
+      "rules": [
+        ["rule_common.Translate_3rd_Party",  {"engine": "google", "from": "en", "to": "zh"}]
+      ],
+      "outputs": ["trans.google"]
+    },
+    {
+      "name": "merge all translation results",
+      "type": "file",
+      "inputs": ["doc.sens", "doc.sens.clean", "trans.atman", "trans.baidu", "trans.bing", "trans.google"],
+      "rules": [
+        ["rule_common.Group_Lines_With_Tags_If_Exist", {"tags": ["[Source]", "[AtmanIn]", "[Atman]", "[Baidu]", "[Bing]", "[Google]"]}]
+      ],
+      "outputs": ["trans.merge"]
+    }
+  ],
+
+  "final_outputs": ["doc.sens.clean", "trans.atman", "trans.atman.tidy", "trans.baidu", "trans.bing", "trans.google", "trans.merge"]
+}

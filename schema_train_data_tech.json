@@ -1,0 +1,98 @@
+{
+  "meta": {
+    "name": "tech data pre-process schema",
+    "version": "1.0",
+    "author": "Aihu Zhang",
+    "description": "the input is a file with two columns: English sentence\tChinese sentence"
+  },
+
+  "steps": [
+    {
+      "name": "split",
+      "type": "file",
+      "inputs": ["test_data/en-zh.txt"],
+      "rules": [
+        ["rule_common.Split_To_Twin_Files",   {}]
+      ],
+      "outputs": ["en", "zh"]
+    },
+    {
+      "name": "clean en",
+      "type": "line",
+      "replace_empty_line": "REMOVETHISLINE",
+      "inputs": ["en"],
+      "rules": [
+        ["rule_en.Replace_Chinese_Punctuation",       {}],
+        ["rule_common.Remove_Single_Quotation_v2",    {}],
+        ["rule_en.Remove_Contain_Chinese",            {}],
+        ["rule_en.Dedupe_Repeated_Punctuation",       {}],
+        ["rule_en.Remove_Bullet_v2",                  {}],
+        ["rule_common.Remove_Redundant_Spaces",       {}],
+        ["rule_common.Remove_Bad_Begin",              {}],
+        ["rule_common.Remove_Special_Chars",          {}],
+        ["rule_common.To_Lower",                      {}]
+      ],
+      "outputs": ["en.line.clean", "en.remove"]
+    },
+    {
+      "name": "apply en tokenizer",
+      "type": "file",
+      "inputs": ["en.line.clean"],
+      "rules": [
+        ["rule_common.General_Tokenizer",             {"lang": "en"}]
+      ],
+      "outputs": ["en.line.clean.tok"]
+    },
+    {
+      "name": "clean zh",
+      "type": "line",
+      "replace_empty_line": "REMOVETHISLINE",
+      "inputs": ["zh"],
+      "rules": [
+        ["rule_common.Remove_Single_Quotation_v2",    {}],
+        ["rule_zh.Remove_Not_Contain_Chinese",        {}],
+        ["rule_zh.Dedupe_Repeated_Punctuation",       {}],
+        ["rule_en.Dedupe_Repeated_Punctuation",       {}],
+        ["rule_zh.Remove_Bullet_v2",                  {}],
+        ["rule_common.Remove_Redundant_Spaces",       {}],
+        ["rule_common.Remove_Bad_Begin",              {}],
+        ["rule_common.Remove_Special_Chars",          {}],
+        ["rule_common.To_Lower",                      {}]
+      ],
+      "outputs": ["zh.line.clean", "zh.remove"]
+    },
+    {
+      "name": "apply en tokenizer",
+      "type": "file",
+      "inputs": ["zh.line.clean"],
+      "rules": [
+        ["rule_common.General_Tokenizer",             {"lang": "en"}]
+      ],
+      "outputs": ["zh.line.clean.tok"]
+    },
+    {
+      "name": "segment zh (en sub-string not impacted)",
+      "type": "file",
+      "inputs": ["zh.line.clean.tok"],
+      "rules": [
+        ["rule_zh.Seg_Chinese_Only",                  {}]
+      ],
+      "outputs": ["zh.line.clean.tok.seg"]
+    },
+    {
+      "name": "final clean",
+      "type": "file",
+      "inputs": ["en.line.clean.tok", "zh.line.clean.tok.seg"],
+      "rules": [
+        ["rule_common.Combine_Twin_Files",            {}],
+        ["rule_common.Remove_Lines_With_Content",     {"content": "REMOVETHISLINE"}],
+        ["rule_common.Sort",                          {}],
+        ["rule_common.Uniq",                          {}],
+        ["rule_common.Split_To_Twin_Files",           {}]
+      ],
+      "outputs": ["en.final", "zh.final"]
+    }
+  ],
+
+  "final_outputs": ["en.line.clean", "en.line.clean.tok", "zh.line.clean", "zh.line.clean.tok", "zh.line.clean.tok.seg", "en.final", "zh.final"]
+}

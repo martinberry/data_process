@@ -1,0 +1,48 @@
+{
+
+  "original_doc": {
+    "date": "2016-09-01T15:32:43.054644",
+    "source": "http://www.example.com",
+    "lang": "en",
+    "categories": ["finance", "news"],
+    "tags": ["example"],
+    "structured_content": {
+      "title": "",
+      "author": "",
+      "publication_date": "2016-09-01T15:32:43.054644"
+    },
+    "paragraphs": [ "paragraph1", "paragraph2" ]
+  },
+
+  "processed_doc": {
+    "date": "2016-09-01T15:32:43.054644",
+    "process_method": "schema_xxxx.json",
+    "paragraphs": [
+      { "sentences": ["this is a sentence", "this is a sentence", "this is a sentence"] },
+      { "sentences": ["this is a sentence", "this is a sentence", "this is a sentence"] }
+    ]
+  },
+
+  "translated_docs": [
+    {
+      "date": "2016-09-01T15:32:43.054644",
+      "engine": "atman-coverage-embedding",
+      "model": "366000",
+      "score": 0.79091,
+      "paragraphs": [
+          { "sentences": [ { "score": 0.19501, "sum_score": 4.55, "text": "this is a sentence" }, { "score": 0.29501, "text": "this is b sentence" } ] },
+          { "sentences": [ { "score": 0.39501, "sum_score": 4.55, "text": "this is c sentence" } ] }
+        ]
+    },
+
+    {
+      "date": "2016-09-01T15:32:43.054644",
+      "engine": "baidu",
+      "score": 0.79091,
+      "paragraphs": [
+        { "sentences": [ { "score": 0.49501, "sum_score": 4.55, "text": "this is d sentence" }, { "score": 0.89501, "text": "this is e sentence" } ] },
+        { "sentences": [ { "score": 0.59501, "sum_score": 4.55, "text": "this is f sentence" } ] }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "meta": {
+    "name": "tran a article process",
+    "version": "1.0",
+    "author": "Du SiXing",
+    "description": "translate a article"
+  },
+
+  "steps": [
+    {
+      "name": "pre clean",
+      "type": "file",
+      "replace_empty_line": "",
+      "inputs": [""],
+      "rules": [
+        ["rule_en.Segment_EN_Doc_To_Sentences",            {}]
+      ],
+      "outputs":["1_to_sentence"]
+    },
+    {
+      "name":"find the contain upper character word in sentence",
+      "type":"line",
+      "replace_empty_line": "",
+      "inputs":["1_to_sentence"],
+      "rules": [
+        ["rule_en.Catch_Contain_Upper_Character_Word",     {}]
+      ],
+      "outputs":["2_catch_word_list","temp"]
+    },
+    {
+      "name":"uniq the repeate word in word list",
+      "type":"file",
+      "inputs":["2_catch_word_list"],
+      "rules": [
+        ["rule_common.Sort",                               {}],
+        ["rule_common.Uniq",                               {}]
+      ],
+      "outputs":["final_word_list"]
+    }
+    ],
+  "final_outputs":["final_word_list"]
+}

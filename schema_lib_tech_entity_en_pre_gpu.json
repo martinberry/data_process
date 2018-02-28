@@ -1,0 +1,29 @@
+{
+  "meta": {
+    "name": "tech domain PRE processing for lib mode",
+    "version": "1.0",
+    "author": "Aihu Zhang",
+    "description": "for using in lib mode only"
+  },
+
+  "steps": [
+    {
+      "name": "pre-process en",
+      "type": "sole_line",
+      "replace_empty_line": "",
+      "rules": [
+        ["rule_en.Replace_Chinese_Punctuation",     {}],
+        ["rule_common.Remove_Single_Quotation_v2",  {}],
+        ["rule_en.Dedupe_Repeated_Punctuation",     {}],
+        ["rule_en.Remove_Bullet_v2",                {}],
+        ["rule_common.Remove_Redundant_Spaces",     {}],
+        ["rule_common.Remove_Bad_Begin",            {}],
+        ["rule_common.Remove_Special_Chars",        {}],
+        ["rule_common.To_Lower",                    {}],
+        ["rule_common.General_Sentence_Tokenizer",  {"lang": "en"}],
+        ["rule_common.Remove_Redundant_Spaces",     {}],
+        ["rule_common.Restore_Entity_v2",           {"entity_tag": "Person|Organization|Location"}]
+      ]
+    }
+  ]
+}
