@@ -29,26 +29,26 @@ def main():
     # check schema file
     schema_file = args.schema
     if not os.path.exists(schema_file):
-        print ('file %s does not exist' % schema_file)
+        print 'file %s does not exist' % schema_file
         raise Exception
 
     if args.workdir:
         workdir = args.workdir
         if not os.path.exists(args.workdir):
-            print ('create working dir %s' % workdir)
+            print 'create working dir %s' % workdir
             os.mkdir(workdir)
     else:
         workdir = "work_%s" % str(uuid.uuid4().hex)
-        print ('not specified working dir, create one with random name: %s' % workdir)
+        print 'not specified working dir, create one with random name: %s' % workdir
         os.mkdir(workdir)
 
     st = time.time()
     with rule_engine.RuleEngine(schema_file, workdir) as engine:
         engine.run(infiles)
 
-    print ('[All done!]')
-    print ('[Results were saved to: %s]' % workdir)
-    print (["Total time: %.2f" % (time.time()-st)])
+    print '[All done!]'
+    print '[Results were saved to: %s]' % workdir
+    print ["Total time: %.2f" % (time.time()-st)]
 
 
 if __name__ == "__main__":

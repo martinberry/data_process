@@ -276,42 +276,6 @@ class FullWidth_To_Halfwidth(Rule_Line):
         return line
 
 
-class FullWidth_To_Halfwidth_v2(Rule_Line):
-    def __init__(self):
-        super(self.__class__, self).__init__()
-        self.init_dict()
-        self.set_desc('Change fullwidth character to halfwidth character.', self)
-
-    def init_dict(self):
-        # ascii
-        keys = [unichr(i) for i in range(0xff01, 0xff5f)]
-        values = [unichr(i-65248) for i in range(0xff01, 0xff5f)]
-
-        # ¢,£,¬,¯,¦,¥,₩
-        keys.extend([u'\uffe0', u'\uffe1', u'\uffe2', u'\uffe3', u'\uffe4', u'\uffe5', u'\uffe6'])
-        values.extend([u'\u00a2', u'\u00a3', u'\u00ac', u'\u00af', u'\u00a6', u'\u00a5', u'\u20a9'])
-
-        self.dict = dict(zip(keys, values))
-
-        # chinese punctuations to exclude
-        excludes = [u'！', u'（', u'）', u'，', u'：', u'；', u'？', u'～']
-
-        for c in excludes:
-            if c in self.dict:
-                del self.dict[c]
-
-    def run(self, line):
-        if not line:
-            return None
-
-        new_line = []
-        for w in line.strip():
-            new_line.append(self.dict.get(w, w))
-
-        line = ''.join(new_line)
-        return line
-
-
 class Pair_Punctuation_Close_Check(Rule_Line):
     def __init__(self, **kwargs):
         super(self.__class__, self).__init__()
@@ -458,9 +422,9 @@ class Pair_Slot_Tag_Number(Rule_Line):
         if pure_num != num:
             unit = num[len(pure_num):].lstrip()
             pure_num = re.sub(r',| ', '', pure_num)
-            if unit == u'万':
+            if unit == '万':
                 result = self.increase_magnitude(pure_num, 4)
-            elif unit == u'亿':
+            elif unit == '亿':
                 result = self.increase_magnitude(pure_num, 8)
             else:
                 result = self.increase_magnitude(pure_num, 12)
@@ -510,9 +474,9 @@ class Pair_Slot_Tag_Number(Rule_Line):
         else:
             return [frag]
 
-    def slot_tag(self, src_line, trg_line):
-        src_reglist, trg_reglist = self.En_Reg_List, self.Zh_Reg_List
-        src_frags, trg_frags = [(src_line, True)], [(trg_line, True)]
+    def slot_tag(self, src_line, trg_line, src_reglist, trg_reglist):
+        src_frags = [(src_line, True)]
+        trg_frags = [(trg_line, True)]
 
         for src_reg in src_reglist:
             new_src_frags = []
@@ -546,7 +510,7 @@ class Pair_Slot_Tag_Number(Rule_Line):
                     if src_val[0] == trg_val[0] and trg_val[1] >= 0:  # align
                         src_frags[src_val[1]][0] = self.number_tag  # replace number with number_tag
                         trg_frags[trg_val[1]][0] = self.number_tag
-                        trg_val[1] = -1  # target should be aligned once
+                        trg_val[1] = -1  # it make taget should be aligned once
                         break
 
         src_texts = []
@@ -575,7 +539,7 @@ class Pair_Slot_Tag_Number(Rule_Line):
         source_str = line_frags[0].strip()
         target_str = line_frags[1].strip()
 
-        source_str, target_str = self.slot_tag(source_str, target_str)
+        source_str, target_str = self.slot_tag(source_str, target_str, self.En_Reg_List, self.Zh_Reg_List)
 
         return source_str + '\t' + target_str
 
@@ -1510,29 +1474,6 @@ class Split_To_Twin_Files_v3(Rule_File):
                         or_f.write(pair[1] + '\n')
 
         return [outfile_l, outfile_r]
-
-
-class Remove_Separator_Symbols(Rule_File):
-    def __init__(self, **kwargs):
-        super(self.__class__, self).__init__()
-        self.set_desc('File cmd: remove the symbol separating line, beside newline ', self)
-
-        self.line_separators = [u'\u2028', u'\u2029']  # Add unicode line separators here
-        self.line_separators = [x.encode('utf-8') for x in self.line_separators]
-        self.line_separators.extend(['\x0b', '\x0c', '\x0d', '\x1c', '\x1d', '\x1e'])  # Add utf-8 line separators here
-
-    def run(self, files):
-        file = files[0]
-        self.file_exist(file)
-        with open(file, "r") as i_f:
-            with open(self.output, "w") as o_f:
-                for line in i_f:
-                    for sep in self.line_separators:
-                        line = line.replace(sep, '')
-
-                    o_f.write(line)
-
-        return [self.output]
 
 
 class Combine_Twin_Files(Rule_File_Shell):

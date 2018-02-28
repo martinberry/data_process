@@ -173,4 +173,4 @@ if __name__ == '__main__':
     for i, line in enumerate(args.input):
         args.output.write(bpe.segment(line).strip())
         args.output.write('\n')
-        if i > 0 and i % 1000000 == 0: print 'processed %d lines' % i
+        if i > 0 and i % 1000000 == 0: print ('processed %d lines' % i)

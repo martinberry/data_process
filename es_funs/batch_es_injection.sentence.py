@@ -25,22 +25,23 @@ def batch_injection(host, filename, index, doctype):
         line = f.readline()
         actions = []
         while line and line != '\n':
-            cnt += 1
             body_data = {}
             body_data["text"] = line.decode('utf-8')
-            body_data["id"] = cnt
             body_data["_op_type"] = 'index'
             body_data["_index"] = index
             body_data["_type"] = doctype
             actions.append(body_data)
-            if cnt % 10000 == 0:
+            cnt += 1
+            if cnt % 5000 == 0:
+                tmp = ''.join(data)
+                # print tmp
                 bulk(es, actions, stats_only=True)
-                actions = []
                 print 'processed %d requests' % cnt
+                data = []
 
             line = f.readline()
 
-        if len(actions):
+        if cnt > 0:
             bulk(es, actions, stats_only=True)
         print 'done: total %d requests' % cnt
 
@@ -48,4 +49,3 @@ def batch_injection(host, filename, index, doctype):
 if __name__ == '__main__':
     args = parse_args()
     batch_injection(args.server, args.file, args.index, args.doctype)
-

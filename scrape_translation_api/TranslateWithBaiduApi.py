@@ -113,7 +113,8 @@ def call_translation_api(lines, proxy):
                     if lines[i][1]:
                         olines.append("%s\t%s\t%s" % (lines[i][0], lines[i][1], translated_lines[i]))
                     else:
-                        olines.append("%s\t%s" % (lines[i][0], translated_lines[i]))
+                        # olines.append("%s\t%s" % (lines[i][0], translated_lines[i]))
+                        olines.append(translated_lines[i])
 
                 output_queue.put(olines)
                 time.sleep(1)
